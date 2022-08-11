@@ -4,9 +4,12 @@ Austrian Open Science Cloud - Hub Operator
 
 ## What it does
 
-It creates CRDs for Kubespawner Profiles to read in JupyterHub: [hub.austrianopensciencecloud.org_profiles.yaml](/config/crd/bases/hub.austrianopensciencecloud.org_profiles.yaml)
+It creates CRDs for Kubespawner profiles to read in JupyterHub: [hub.austrianopensciencecloud.org_profiles.yaml](/config/crd/bases/hub.austrianopensciencecloud.org_profiles.yaml)
 
 - [KubeSpawner ProfileList](https://jupyterhub-kubespawner.readthedocs.io/en/latest/spawner.html#kubespawner.KubeSpawner.profile_list)
+
+  
+Additionally, you can allow profiles only for specific groups with: `allowed_groups: []` (optional)
 
 ## Sample
 
