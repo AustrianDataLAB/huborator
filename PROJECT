@@ -1,0 +1,20 @@
+componentConfig: true
+domain: austrianopensciencecloud.org
+layout:
+- go.kubebuilder.io/v3
+plugins:
+  manifests.sdk.operatorframework.io/v2: {}
+  scorecard.sdk.operatorframework.io/v2: {}
+projectName: huborator
+repo: github.com/AustrianDataLAB/huborator
+resources:
+- api:
+    crdVersion: v1
+    namespaced: true
+  controller: true
+  domain: austrianopensciencecloud.org
+  group: hub
+  kind: Profile
+  path: github.com/AustrianDataLAB/huborator/api/v1alpha1
+  version: v1alpha1
+version: "3"

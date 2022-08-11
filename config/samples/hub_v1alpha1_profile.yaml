@@ -1,0 +1,6 @@
+apiVersion: hub.austrianopensciencecloud.org/v1alpha1
+kind: Profile
+metadata:
+  name: profile-sample
+spec:
+  # TODO(user): Add fields here
