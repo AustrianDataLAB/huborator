@@ -55,5 +55,51 @@ spec:
           kubespawner_override:
             cpu_limit: 6
             mem_limit: 6G
+```
 
+## Hot to use in JupyterHub
+
+```python
+import os
+from kubespawner.clients import shared_client
+
+## see: https://discourse.jupyter.org/t/tailoring-spawn-options-and-server-configuration-to-certain-users/8449#solution-to-problem-1-4
+async def options_form(spawner):
+  auth_state = await spawner.user.get_auth_state()
+
+  group = 'hub.austrianopensciencecloud.org'
+  version = 'v1alpha1'
+  namespace = os.getenv('POD_NAMESPACE')
+  plural = 'profiles'
+
+  profile_list = []
+  if len(spawner.profile_list) > 0:
+    profile_list = spawner.profile_list
+
+  api_client = shared_client('CustomObjectsApi')
+  groups = auth_state.get("groups", [])
+  #name = auth_state.get("name", "USER")
+  #spawner.log.info(f"{name}s options_form groups: {groups}")
+
+  ## see: https://github.com/kubernetes-client/python/blob/master/kubernetes/docs/CustomObjectsApi.md
+  try:
+    res = await api_client.list_namespaced_custom_object(group, version, namespace, plural)
+    for item in res['items']:
+      allowed_groups = item['spec'].get("allowed_groups", False)
+
+      if not allowed_groups and item['spec'] not in profile_list:
+        profile_list.append(item['spec'])
+        continue
+
+      if any(group in groups for group in allowed_groups) and item['spec'] not in profile_list:
+        profile_list.append(item['spec'])
+  
+  except Exception as e:
+    spawner.log.info('### Error in options_form')
+    spawner.log.error(e)
+
+  spawner.profile_list = profile_list
+  return spawner._options_form_default()
+
+c.KubeSpawner.options_form = options_form
 ```
